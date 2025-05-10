@@ -54,6 +54,18 @@ source venv/bin/activate;
 
 pip install -r requirements.txt;
 
+# To properly install the correct CUDA compatible PyTorch
+CUDA_VERSION=$(nvidia-smi | grep "CUDA Version" | awk '{print $11}')
+echo "Detected CUDA Version: $CUDA_VERSION"
+if [[ "$CUDA_VERSION" == *"11.8"* ]]; then
+  pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+elif [[ "$CUDA_VERSION" == *"12."* ]]; then
+  pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121 # Or the specific 12.x version
+else
+  echo "Warning: CUDA version not explicitly handled in script. Attempting default PyTorch install."
+  pip install torch torchvision torchaudio
+fi
+
 sleep infinity
 
 '
