@@ -68,7 +68,7 @@ async def main():
 
                 for i, batch in enumerate(batch_read_jsonl(RAW_DATA_PATH, batch_size)):
 
-                    if i%500 == 0:
+                    if i%100 == 0:
                         await send_message(f"Producing {model_data['model_name']} embedding batch NO: {i+1}")
 
                     # free unallocated memory
