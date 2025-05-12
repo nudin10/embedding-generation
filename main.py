@@ -5,6 +5,7 @@ load_dotenv()
 import logging
 from tools.logger import Logger
 from tools.cache import delete_huggingface_cache_directory
+from tools.counter import count_lines_in_file
 from slm.qwen import QwenSLM
 from slm.phi import PhiSLM
 from slm.slm import SLM
@@ -14,6 +15,7 @@ from asyncio import run as async_run
 from tools.storer import LocalEmbeddingStorer, S3EmbeddingStorer, LocalFileCleanupException
 import json
 import torch
+from math import ceil
 
 async def main():
     logger = Logger(level=logging.DEBUG)
@@ -61,15 +63,22 @@ async def main():
                 RAW_DATA_PATH="./data/Magazine_Subscriptions.jsonl"
                 batch_size = 30
 
+                datapoints_total = count_lines_in_file(RAW_DATA_PATH)
+                expected_batch_files_total = ceil(datapoints_total / batch_size)
+
+                await send_message(f"Expected batch file total: {expected_batch_files_total}")
+
                 # # TODO: ONLY FOR TESTING. COMMENT WHEN DONE
                 # limit = 10
                 # batch_size = 5
                 # limit_counter = 0
 
                 for i, batch in enumerate(batch_read_jsonl(RAW_DATA_PATH, batch_size)):
-
                     if i%100 == 0:
                         await send_message(f"Producing {model_data['model_name']} embedding batch NO: {i+1}")
+
+                    if i > expected_batch_files_total:
+                        await send_warning(f"Program is producing more files than expected: {i}")
 
                     # free unallocated memory
                     torch.cuda.empty_cache()
@@ -126,7 +135,9 @@ async def main():
                 raise
 
         except Exception as e:
-            logger.error(f"Error generating embeddings: {e}")
+            message = f"Error generating embeddings: {e}"
+            await send_error(message)
+            logger.error(message)
             raise
         finally:
             await send_message(f"Ended embedding generation: {model_name}")
