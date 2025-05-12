@@ -6,6 +6,7 @@ import boto3
 from datetime import datetime
 import pytz
 from pathlib import Path
+import os
 
 
 class Storer:
@@ -94,7 +95,19 @@ class LocalFileCleanupException(Exception):
 class S3EmbeddingStorer(Storer):
     def __init__(self, debug=False):
         self.logger = Logger(name="S3EmbeddingStorer", level=logging.DEBUG if debug else logging.INFO)
-        self.s3_client = boto3.client("s3")
+
+        ACCESS_KEY=os.getenv("AWS_ACCESS_KEY_ID") or os.getenv("RUNPOD_SECRET_AWS_ACCESS_KEY_ID")
+        SECRET_KEY=os.getenv("AWS_SECRET_ACCESS_KEY") or os.getenv("RUNPOD_SECRET_AWS_SECRET_ACCESS_KEY")
+        if not ACCESS_KEY or not SECRET_KEY:
+            self.logger.critical("AWS credentials not found in expected environment variables. Exiting...")
+            exit(1)
+
+        self.s3_client = boto3.client(
+            "s3",
+            aws_access_key_id=ACCESS_KEY,
+            aws_secret_access_key=SECRET_KEY,
+        )
+
         self.bucket = "runpod-din"
 
         malaysia_timezone = pytz.timezone('Asia/Kuala_Lumpur')
