@@ -4,6 +4,7 @@ load_dotenv()
 
 import logging
 from tools.logger import Logger
+from tools.cache import delete_huggingface_cache_directory
 from slm.qwen import QwenSLM
 from slm.phi import PhiSLM
 from slm.slm import SLM
@@ -60,7 +61,7 @@ async def main():
 
             try:
                 RAW_DATA_PATH="./data/Magazine_Subscriptions.jsonl"
-                batch_size = 25
+                batch_size = 50
 
                 # # TODO: ONLY FOR TESTING. COMMENT WHEN DONE
                 # limit = 10
@@ -120,6 +121,13 @@ async def main():
                 await send_error(message)
                 logger.error(message)
                 raise
+
+            try:
+                delete_huggingface_cache_directory()
+            except Exception as e:
+                message = f"Unable to clear huggingface cache: {e}"
+                await send_message(message)
+                logger.error(message)
 
         except Exception as e:
             logger.error(f"Error generating embeddings: {e}")
