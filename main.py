@@ -18,11 +18,14 @@ import torch
 async def main():
     logger = Logger(level=logging.DEBUG)
 
+    # free unallocated memory
+    torch.cuda.empty_cache()
+
     qwen = QwenSLM
     phi = PhiSLM
 
     models = [
-        {
+        {z
             "model": qwen,
             "model_name": "Qwen"
         },
@@ -41,8 +44,6 @@ async def main():
 
             try:
                 model: SLM = model_data["model"](debug=False)
-                # free unallocated memory
-                torch.cuda.empty_cache()
 
             except Exception as e:
                 message = f"Failed to load model {model_data['model_name']}: {e}"
@@ -61,7 +62,7 @@ async def main():
 
             try:
                 RAW_DATA_PATH="./data/Magazine_Subscriptions.jsonl"
-                batch_size = 50
+                batch_size = 70
 
                 # # TODO: ONLY FOR TESTING. COMMENT WHEN DONE
                 # limit = 10
