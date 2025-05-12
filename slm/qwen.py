@@ -45,7 +45,7 @@ class QwenSLM:
         Obtain the vector that represents the entire input, consolidating individual token vectors into one.
         Applies mean pooling
         '''
-        tokenized = self.tokenizer(inputs, padding=True, truncation=True, return_tensors="pt").to(self.device)
+        tokenized = self.tokenizer(inputs, padding=True, truncation=True, return_tensors="pt", max_length=512).to(self.device)
         self.logger.debug(f"Tokenized input shape (input_ids): {tokenized['input_ids'].shape}")
         self.logger.debug(f"Attention mask shape: {tokenized['attention_mask'].shape}")
 
