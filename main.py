@@ -25,7 +25,7 @@ async def main():
     phi = PhiSLM
 
     models = [
-        {z
+        {
             "model": qwen,
             "model_name": "Qwen"
         },
