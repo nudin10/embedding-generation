@@ -48,6 +48,11 @@ class Storer:
         embeddings_np = embeddings.to(torch.float32).cpu().numpy()
 
         metadata_col_data = metadata
+        item_id_col_data = []
+        user_id_col_data = []
+        for data in metadata_col_data:
+            item_id_col_data.append(data["item_id"]) or ""
+            user_id_col_data.append(data["user_id"]) or ""
 
         embedding_col_data = [row.tolist() for row in embeddings_np]
 
@@ -55,8 +60,11 @@ class Storer:
         ts_shape_col_data = [single_embedding_shape] * batch_size
 
         try:
+
             # column keys based on Amazon magazine subscription data
             data = pl.DataFrame({
+                "item_id": item_id_col_data,
+                "user_id": user_id_col_data,
                 "metadata": metadata_col_data,         
                 "embedding": embedding_col_data,        
                 "ts_shape": ts_shape_col_data           
