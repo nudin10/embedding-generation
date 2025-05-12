@@ -55,11 +55,8 @@ class Storer:
         ts_shape_col_data = [single_embedding_shape] * batch_size
 
         try:
-
             # column keys based on Amazon magazine subscription data
             data = pl.DataFrame({
-                "item_id": metadata_col_data["item_id"],
-                "user_id": metadata_col_data["user_id"],
                 "metadata": metadata_col_data,         
                 "embedding": embedding_col_data,        
                 "ts_shape": ts_shape_col_data           
