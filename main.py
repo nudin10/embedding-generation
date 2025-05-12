@@ -12,6 +12,7 @@ from tools.batch import batch_read_jsonl
 from asyncio import run as async_run
 from tools.storer import LocalEmbeddingStorer, S3EmbeddingStorer, LocalFileCleanupException
 import json
+import torch
 
 async def main():
     logger = Logger(level=logging.DEBUG)
@@ -39,6 +40,8 @@ async def main():
 
             try:
                 model: SLM = model_data["model"](debug=False)
+                # free unallocated memory
+                torch.cuda.empty_cache()
 
             except Exception as e:
                 message = f"Failed to load model {model_data['model_name']}: {e}"
@@ -57,7 +60,7 @@ async def main():
 
             try:
                 RAW_DATA_PATH="./data/Magazine_Subscriptions.jsonl"
-                batch_size = 50
+                batch_size = 25
 
                 # # TODO: ONLY FOR TESTING. COMMENT WHEN DONE
                 # limit = 10
