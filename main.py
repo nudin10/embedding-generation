@@ -18,9 +18,6 @@ import torch
 async def main():
     logger = Logger(level=logging.DEBUG)
 
-    # free unallocated memory
-    torch.cuda.empty_cache()
-
     qwen = QwenSLM
     phi = PhiSLM
 
@@ -71,6 +68,9 @@ async def main():
 
                 for i, batch in enumerate(batch_read_jsonl(RAW_DATA_PATH, batch_size)):
                     await send_message(f"Producing {model_data['model_name']} embedding batch NO: {i+1}")
+
+                    # free unallocated memory
+                    torch.cuda.empty_cache()
 
                     parsed_batch = []
                     metadata = []
