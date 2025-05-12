@@ -61,7 +61,7 @@ async def main():
 
             try:
                 RAW_DATA_PATH="./data/Magazine_Subscriptions.jsonl"
-                batch_size = 200
+                batch_size = 150
 
                 # # TODO: ONLY FOR TESTING. COMMENT WHEN DONE
                 # limit = 10
