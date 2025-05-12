@@ -121,20 +121,20 @@ async def main():
                 await send_error(message)
                 logger.error(message)
                 raise
-        
-        try:
-            delete_huggingface_cache_directory()
-        except Exception as e:
-            message = f"Unable to clear huggingface cache: {e}"
-            await send_message(message)
-            logger.error(message)
-            
+
         except Exception as e:
             logger.error(f"Error generating embeddings: {e}")
             raise
         finally:
             await send_message(f"Ended embedding generation: {model_name}")
             pass
+
+        try:
+            delete_huggingface_cache_directory()
+        except Exception as e:
+            message = f"Unable to clear huggingface cache: {e}"
+            await send_message(message)
+            logger.error(message)
 
 if __name__ == "__main__":
     async_run(main())
