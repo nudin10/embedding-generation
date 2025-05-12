@@ -61,7 +61,7 @@ async def main():
 
             try:
                 RAW_DATA_PATH="./data/Magazine_Subscriptions.jsonl"
-                batch_size = 30
+                batch_size = 20
 
                 datapoints_total = count_lines_in_file(RAW_DATA_PATH)
                 expected_batch_files_total = ceil(datapoints_total / batch_size)
