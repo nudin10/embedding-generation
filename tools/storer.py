@@ -10,8 +10,8 @@ import os
 
 
 class Storer:
-    def __init__(self):
-        pass
+    def __init__(self, debug=False):
+        self.logger = Logger(name="Storer", level=logging.DEBUG if debug else logging.INFO)
 
     def flatten_embedding(self, embeddings):
         '''
@@ -51,8 +51,8 @@ class Storer:
         item_id_col_data = []
         user_id_col_data = []
         for data in metadata_col_data:
-            item_id_col_data.append(data["item_id"]) or ""
-            user_id_col_data.append(data["user_id"]) or ""
+            item_id_col_data.append(data["item_id"] or "")
+            user_id_col_data.append(data["user_id"] or "")
 
         embedding_col_data = [row.tolist() for row in embeddings_np]
 
@@ -80,7 +80,7 @@ class Storer:
 
 class LocalEmbeddingStorer(Storer):
     def __init__(self, debug=False):
-        self.logger = Logger(name="EmbeddingStorer", level=logging.DEBUG if debug else logging.INFO)
+        super().logger = Logger(name="EmbeddingStorer", level=logging.DEBUG if debug else logging.INFO)
 
     def store_embeddings(self, embeddings_df: pl.DataFrame, file_path):
         '''
@@ -99,7 +99,7 @@ class LocalFileCleanupException(Exception):
 
 class S3EmbeddingStorer(Storer):
     def __init__(self, debug=False):
-        self.logger = Logger(name="S3EmbeddingStorer", level=logging.DEBUG if debug else logging.INFO)
+        super().logger = Logger(name="S3EmbeddingStorer", level=logging.DEBUG if debug else logging.INFO)
 
         ACCESS_KEY=os.getenv("AWS_ACCESS_KEY_ID") or os.getenv("RUNPOD_SECRET_AWS_ACCESS_KEY_ID")
         SECRET_KEY=os.getenv("AWS_SECRET_ACCESS_KEY") or os.getenv("RUNPOD_SECRET_AWS_SECRET_ACCESS_KEY")

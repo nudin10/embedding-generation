@@ -7,13 +7,13 @@ import logging
 class TelegramBot:
     def __init__(self, debug=False):
         self.logger = Logger(name="TelegramBot", level=logging.DEBUG if debug else logging.INFO)
-        self.token = os.getenv("TELEGRAM_BOT_TOKEN")
-        if self.token == "":
-            self.token = os.getenv("RUNPOD_SECRET_TELEGRAM_BOT_TOKEN")
+        self.token: str = os.getenv("TELEGRAM_BOT_TOKEN") #type:ignore
+        if not self.token:
+            self.token = os.getenv("RUNPOD_SECRET_TELEGRAM_BOT_TOKEN") #type:ignore
 
-        self.chat_id = os.getenv("TELEGRAM_CHAT_ID")
-        if self.chat_id == "":
-            self.chat_id == os.getenv("RUNPOD_SECRET_TELEGRAM_CHAT_ID")
+        self.chat_id: str = os.getenv("TELEGRAM_CHAT_ID") #type:ignore
+        if not self.chat_id:
+            self.chat_id = os.getenv("RUNPOD_SECRET_TELEGRAM_CHAT_ID") #type:ignore
 
         self.app = Application.builder().token(self.token).build()
 
