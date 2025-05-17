@@ -24,10 +24,10 @@ async def main():
     phi = PhiSLM
 
     models = [
-        # {
-        #     "model": qwen,
-        #     "model_name": "Qwen"
-        # },
+        {
+            "model": qwen,
+            "model_name": "Qwen"
+        },
         {
             "model": phi,
             "model_name": "Phi"
