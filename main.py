@@ -114,7 +114,7 @@ async def main():
                         
 
                     embeddings = model.generate_embeddings(parsed_batch)
-                    df = embedding_storer.get_embeddings_dataframe(embeddings=embeddings, metadata=metadata)
+                    df = embedding_storer.get_embeddings_dataframe(embeddings=embeddings, metadata=metadata) #type:ignore
                     embedding_storer.store_embeddings(df, f"./{model_name}_{i+1}", f"{model_name}_{i+1}")
 
                     # # TODO: ONLY FOR TESTING. COMMENT WHEN DONE
